@@ -2,9 +2,56 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
+import math
+
 # Variáveis globais para controlar a posição do boneco
 stick_figure_position = [0, 0, 0]
 window_width, window_height = 800, 600
+
+def draw_cube():
+    glColor3f(1.0,0.0,0.0)
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.25,0.25,0.25)
+    glVertex3f(0.25,0.25,0.25)
+    glVertex3f(0.25,-0.25,0.25)
+    glVertex3f(-0.25,-0.25,0.25)
+    glEnd()
+    glColor3f(0.0,1.0,0.0)
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.25,0.25,-0.25)
+    glVertex3f(0.25,0.25,-0.25)
+    glVertex3f(0.25,-0.25,-0.25)
+    glVertex3f(-0.25,-0.25,-0.25)
+    glEnd()
+    glColor3f(0.0,0.0,1.0)
+    glBegin(GL_POLYGON)
+    glVertex3f(0.25,-0.25,0.25)
+    glVertex3f(0.25,0.25,0.25)
+    glVertex3f(0.25,0.25,-0.25)
+    glVertex3f(0.25,-0.25,-0.25)
+    glEnd()
+    glColor3f(1.0,1.0,0.0)
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.25,-0.25,0.25)
+    glVertex3f(-0.25,0.25,0.25)
+    glVertex3f(-0.25,0.25,-0.25)
+    glVertex3f(-0.25,-0.25,-0.25)
+    glEnd()
+    glColor3f(1.0,0.0,1.0)
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.25,0.25,0.25)
+    glVertex3f(0.25,0.25,0.25)
+    glVertex3f(0.25,0.25,-0.25)
+    glVertex3f(-0.25,0.25,-0.25)
+    glEnd()
+    glColor3f(0.0,1.0,1.0)
+    glBegin(GL_POLYGON)
+    glVertex3f(-0.25,-0.25,0.25)
+    glVertex3f(0.25,-0.25,0.25)
+    glVertex3f(0.25,-0.25,-0.25)
+    glVertex3f(-0.25,-0.25,-0.25)
+    glEnd()
+    
 
 def draw_stick_figure():
     glPushMatrix()
@@ -14,32 +61,18 @@ def draw_stick_figure():
     glVertex3f(0, 0, 0)
     glVertex3f(0, 1.5, 0)  # Tronco alongado para a cabeça
 
-    glVertex3f(0, 1, 0)
-    glVertex3f(-0.5, 0.5, 0)  # Braço esquerdo
+    glVertex3f(0, 1.3, 0)
+    glVertex3f(-0.5, 0.8, 0)  # Braço esquerdo
 
-    glVertex3f(0, 1, 0)
-    glVertex3f(0.5, 0.5, 0)  # Braço direito
+    glVertex3f(0, 1.3, 0)
+    glVertex3f(0.5, 0.8, 0)  # Braço direito
 
-    glVertex3f(0, 1.2, 0)
-    glVertex3f(-0.5, 1.8, 0)  # Pescoço
+    glVertex3f(0, 0, 0)
+    glVertex3f(-0.5, -0.8, 0)  # Perna esquerda
 
-    glVertex3f(-0.5, 1.8, 0)
-    glVertex3f(-0.3, 2, 0)  # Orelha esquerda
+    glVertex3f(0, 0, 0)
+    glVertex3f(0.5, -0.8, 0)  # Perna direita
 
-    glVertex3f(-0.5, 1.8, 0)
-    glVertex3f(-0.7, 2, 0)  # Orelha direita
-
-    glVertex3f(-0.3, 1.2, 0)
-    glVertex3f(-0.3, 1.8, 0)  # Cabeça (parte traseira)
-
-    glVertex3f(0.5, 1.8, 0)
-    glVertex3f(0.3, 2, 0)  # Orelha esquerda
-
-    glVertex3f(0.5, 1.8, 0)
-    glVertex3f(0.7, 2, 0)  # Orelha direita
-
-    glVertex3f(0.3, 1.2, 0)
-    glVertex3f(0.3, 1.8, 0)  # Cabeça (parte traseira)
     
     glEnd()
 
@@ -52,6 +85,9 @@ def draw():
     gluLookAt(0, 0, 5, 0, 0, 0, 0, 1, 0)  # Câmera na posição (0, 0, 5) olhando para (0, 0, 0)
 
     draw_stick_figure()
+
+    draw_cube()
+
 
     glutSwapBuffers()
 
@@ -84,6 +120,7 @@ def main():
     gluPerspective(45, (800 / 600), 0.1, 50.0)
 
     glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
 
     # Registra a função de desenho e a função para teclas especiais
     glutDisplayFunc(draw)

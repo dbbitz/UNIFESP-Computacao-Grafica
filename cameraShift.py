@@ -18,6 +18,13 @@ object_position = [0, 0, 0]
 def draw_cube():
     glutWireCube(1.0)
 
+def draw_target():
+    # Tamanho dos lados, altura, n lados, n alturas
+    glutWireCylinder(0.3, 0.3, 20, 1)
+
+    glTranslatef(0, 0, 0.3)
+    glutSolidCylinder(0.3, 0.01, 20, 1)
+
 def draw():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()

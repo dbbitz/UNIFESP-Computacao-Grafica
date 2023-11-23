@@ -1,0 +1,1 @@
+gcc -D_STDCALL_SUPPORTED -o myprogram myprogram.c glut32.lib -lglu32 -lopengl32

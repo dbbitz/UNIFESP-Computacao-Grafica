@@ -6,6 +6,7 @@ import math
 import random
 import time
 import ctypes
+from target import draw_sphere
 
 # Variáveis globais para controlar a posição da câmera
 camera_position = [0, 0, 5]
@@ -15,8 +16,11 @@ up_vector = [0, 1, 0]
 # Variáveis globais para controlar a posição do objeto
 object_position = [0, 0, 0]
 
-def draw_cube():
-    glutWireCube(1.0)
+# def draw_sphere(position_X,position_Y,position_Z):
+
+#     glTranslatef(position_X, position_Y, position_Z)
+#     glutWireSphere(0.1, 20, 20)
+#     print("Sphere Position:", position_X, position_Y, position_Z)
 
 def draw_target():
     # Tamanho dos lados, altura, n lados, n alturas
@@ -37,15 +41,31 @@ def draw():
 
     glColor3f(1.0, 1.0, 1.0)  # Cor do objeto (branco)
     glTranslatef(*object_position)
-    draw_cube()
+    draw_sphere(0, 0, 0)
 
     glutSwapBuffers()
+
+
+def mouse_click(button, state, x, y):
+    if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
+        viewport = glGetIntegerv(GL_VIEWPORT)
+        modelview = glGetDoublev(GL_MODELVIEW_MATRIX)
+        projection = glGetDoublev(GL_PROJECTION_MATRIX)
+
+        mouse_x = x
+        mouse_y = y  
+        mouse_pos_near = gluUnProject(mouse_x, mouse_y, 0.0, modelview, projection, viewport)
+        mouse_pos_far = gluUnProject(mouse_x, mouse_y, 1.0, modelview, projection, viewport)
+
+        print("Mouse Position Near:", mouse_x, mouse_y)
+
 
 def special_key_pressed(key, x, y):
     global camera_position, object_position
 
 
     # Atualiza a posição da câmera ou do objeto com base na tecla pressionada
+
     
     if key == GLUT_KEY_DOWN:
         camera_position[1] += 0.1  # Mover a câmera para trás
@@ -56,7 +76,6 @@ def special_key_pressed(key, x, y):
     elif key == GLUT_KEY_RIGHT:
         object_position[0] -= 0.1
 
-    print("Camera Position:", camera_position)
     print("Object Position:", object_position)
 
     glutPostRedisplay()
@@ -79,6 +98,8 @@ def main():
     glutDisplayFunc(draw)
     
     glutSpecialFunc(special_key_pressed)
+
+    glutMouseFunc(mouse_click)
 
     glutMainLoop()
 

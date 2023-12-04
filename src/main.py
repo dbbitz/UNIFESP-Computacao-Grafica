@@ -10,18 +10,12 @@ from components.target import draw_sphere
 
 # Variáveis globais para controlar a posição da câmera
 camera_position = [0, 0, 5]
-look_at = [camera_position[0], camera_position[1], camera_position[2] - 1]
+look_at = [0, 0, 0]
 up_vector = [0, 1, 0]
 
 # Variáveis globais para controlar a posição do objeto
 object_position = [0, 0, 0]
 
-
-def normalize_x(x):
-        return((x / 200.0) - 1.0)
-    
-def normalize_y(y):
-        return(-(y / 200.0) + 1.0)
 
 def draw():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -37,6 +31,8 @@ def draw():
     glTranslatef(*object_position)
     draw_sphere(0.5,0, 0, 0)
 
+
+
     glutSwapBuffers()
 
 
@@ -51,7 +47,6 @@ def mouse_click(button, state, x, y):
         mouse_pos_near = gluUnProject(mouse_x, mouse_y, 0.0, modelview, projection, viewport)
         mouse_pos_far = gluUnProject(mouse_x, mouse_y, 1.0, modelview, projection, viewport)
 
-        print("Mouse Position Near:", mouse_x-400, mouse_y-300)
 
 
 def special_key_pressed(key, x, y):
@@ -60,19 +55,55 @@ def special_key_pressed(key, x, y):
 
     # Atualiza a posição da câmera ou do objeto com base na tecla pressionada
 
+    if look_at[2] > 5:
+        look_at[2] = 5
+
+    if look_at[0] < -5:
+        look_at[0] = -5
+
+    if look_at[0] > 5:
+        look_at[0] = 5
+
     
     if key == GLUT_KEY_DOWN:
-        camera_position[1] += 0.1  # Mover a câmera para trás
-    elif key == GLUT_KEY_UP:
-        camera_position[1] -= 0.1  # Mover o objeto para baixo
-    elif key == GLUT_KEY_LEFT:
-        camera_position[0] += 0.1
-    elif key == GLUT_KEY_RIGHT:
-        camera_position[0] -= 0.1
+        if(look_at[1] > -1):
+            look_at[1] -= 0.1
+        else:
+            look_at[1] = -1
 
-    print("Object Position:", object_position)
+    elif key == GLUT_KEY_UP:
+        if(look_at[1] < 2):
+            look_at[1] += 0.1
+        else:
+            look_at[1] = 2
+
+    elif key == GLUT_KEY_LEFT:
+            if(look_at[2] <= 5):
+                look_at[0] -= math.cos(1.55)*5
+                if(look_at[0] < 0):
+                    look_at[2] += math.sin(0.01745)*5
+                else:
+                    look_at[2] -= math.sin(0.01745)*5
+            
+
+    elif key == GLUT_KEY_RIGHT:
+            if(look_at[2] <= 5):
+                look_at[0] += math.cos(1.55)*5
+                if(look_at[0] < 0): 
+                    look_at[2] -= math.sin(0.01745)*5
+                else:
+                    look_at[2] += math.sin(0.01745)*5
+            
+                    
+
+
+
+    print("Look at | X: " + str(look_at[0]) + " Y: " + str(look_at[1]) + " Z: " + str(look_at[2]))
+    print("Camera  | X: " + str(camera_position[0]) + " Y: " + str(camera_position[1]) + " Z: " + str(camera_position[2]))
 
     glutPostRedisplay()
+
+
 
 
 def main():
@@ -84,7 +115,7 @@ def main():
     glEnable(GL_DEPTH_TEST)
 
     glMatrixMode(GL_PROJECTION)
-    gluPerspective(45, (800 / 600), 0.1, 50.0)
+    gluPerspective(45, (800 / 600), 1, 50.0)
 
     glMatrixMode(GL_MODELVIEW)
 
@@ -92,6 +123,7 @@ def main():
     glutDisplayFunc(draw)
     
     glutSpecialFunc(special_key_pressed)
+
 
     glutMouseFunc(mouse_click)
 

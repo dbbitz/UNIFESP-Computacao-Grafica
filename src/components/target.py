@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-def draw_sphere(size,position_X,position_Y,position_Z):
+def draw_arena(size,position_X,position_Y,position_Z):
 
     glPushMatrix()
     glTranslatef(position_X, position_Y, position_Z)

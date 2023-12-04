@@ -6,7 +6,7 @@ import math
 import random
 import time
 import ctypes
-from components.target import draw_sphere
+from components.target import draw_arena
 
 # Variáveis globais para controlar a posição da câmera
 camera_position = [0, 0, 5]
@@ -29,7 +29,7 @@ def draw():
 
     glColor3f(1.0, 1.0, 1.0)  # Cor do objeto (branco)
     glTranslatef(*object_position)
-    draw_sphere(0.5,0, 0, 0)
+    draw_arena(0.5,0, 0, 0)
 
 
 

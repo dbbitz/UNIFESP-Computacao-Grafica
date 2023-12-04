@@ -6,15 +6,17 @@ import math
 import random
 import time
 import ctypes
-from components.target import draw_arena
+from components.target import draw_target
 
 # Variáveis globais para controlar a posição da câmera
 camera_position = [0, 0, 5]
 look_at = [0, 0, 0]
 up_vector = [0, 1, 0]
+current_sphere_index = 0
 
 # Variáveis globais para controlar a posição do objeto
 object_position = [0, 0, 0]
+sphere_positions = [[0.5, 7, 0, 0], [0.2, 2, 3, 5], [0.3, 4, 6, 8], [0.2, 0, 0, 0], [0.1, 1, 0, 0], [0.3, 2, 0, 0]]
 
 
 def draw():
@@ -29,11 +31,17 @@ def draw():
 
     glColor3f(1.0, 1.0, 1.0)  # Cor do objeto (branco)
     glTranslatef(*object_position)
-    draw_arena(0.5,0, 0, 0)
+    draw_target(*sphere_positions[current_sphere_index])
 
 
 
     glutSwapBuffers()
+
+def TargetTimer(value):
+    global current_sphere_index
+    current_sphere_index = (current_sphere_index + 1) % len(sphere_positions)
+    glutPostRedisplay()  
+    glutTimerFunc(1500, TargetTimer, 0)
 
 
 def mouse_click(button, state, x, y):
@@ -110,10 +118,10 @@ def main():
     glutInit()
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
     glutInitWindowSize(800, 600)
-    glutCreateWindow("Camera and Object Movement in 3D Space")
+    glutCreateWindow(b"Camera and Object Movement in 3D Space")
 
     glEnable(GL_DEPTH_TEST)
-
+    glutTimerFunc(1500, TargetTimer, 0)
     glMatrixMode(GL_PROJECTION)
     gluPerspective(45, (800 / 600), 1, 50.0)
 

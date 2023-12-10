@@ -6,8 +6,13 @@ import math
 import random
 import time
 import ctypes
+from PIL import Image
 from components.target import draw_target
-
+from components.gun import draw_gun
+from components.target import draw_target
+from components.target import draw_scenario
+from components.target import draw_floor
+from components.texture import load_texture
 
 camera_position = [0, 0, 5]
 look_at = [0, 0, 0]
@@ -19,6 +24,8 @@ sphere_positions = [[0.5, 7, 0, 0], [0.2, 2, 3, 5], [0.3, 4, 6, 8], [0.2, 0, 0, 
 
 
 def draw():
+    texture=load_texture('components\grama.bmp')
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
 
@@ -28,11 +35,27 @@ def draw():
         up_vector[0], up_vector[1], up_vector[2]
     )
 
+    draw_floor(texture)
+    glBindTexture(GL_TEXTURE_2D, 0)
+
     glColor3f(1.0, 1.0, 1.0)  
     glTranslatef(*object_position)
     draw_target(*sphere_positions[current_sphere_index])
+    draw_scenario(*sphere_positions[current_sphere_index])
 
+    '''
+    #Deixa a camera na arma
+    adjustment_factor = 0.1  # Ajuste conforme necessário
+    object_position[0] = object_position[0] + adjustment_factor * (look_at[0] - camera_position[0])
+    object_position[1] = object_position[1] + adjustment_factor * (look_at[1] - camera_position[1])
+    object_position[2] = object_position[2] + adjustment_factor * (look_at[2] - camera_position[2])
+    '''
 
+    glTranslatef(0, 0, 2.5)
+    glRotate(135, 0, 1, 0)
+    draw_gun(0.025, 0.3, 25)
+    glTranslatef(-object_position[0], -object_position[1], -object_position[2])
+    
     draw_projectiles()  
 
     glutSwapBuffers()
@@ -165,6 +188,9 @@ def main():
     glutTimerFunc(1500, TargetTimer, 0)
     glMatrixMode(GL_PROJECTION)
     gluPerspective(45, (800 / 600), 1, 50.0)
+
+    glEnable(GL_DEPTH_TEST)
+    glEnable(GL_TEXTURE_2D)
 
     glMatrixMode(GL_MODELVIEW)
 

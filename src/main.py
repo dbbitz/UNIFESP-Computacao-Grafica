@@ -20,11 +20,17 @@ up_vector = [0, 1, 0]
 current_sphere_index = 0
 
 object_position = [0, 0, 0]
-sphere_positions = [[0.5, 7, 0, 0], [0.2, 2, 3, 5], [0.3, 4, 6, 8], [0.2, 0, 0, 0], [0.1, 1, 0, 0], [0.3, 2, 0, 0]]
+sphere_positions = [[0.2, 0, 0, 0], [0.1, 1, 0, 0], [0.3, 2, 0, 0], [0.1, 1.2, 0.4, 0]]
+
+def normalize_x(x):
+        return((x / 200.0) - 1.0)
+    
+def normalize_y(y):
+    return(-(y / 200.0) + 1.0)
 
 
 def draw():
-    texture=load_texture('components\grama.bmp')
+    texture=load_texture('components/grama.bmp')
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
@@ -56,7 +62,7 @@ def draw():
     draw_gun(0.025, 0.3, 25)
     glTranslatef(-object_position[0], -object_position[1], -object_position[2])
     
-    draw_projectiles()  
+   
 
     glutSwapBuffers()
 
@@ -109,74 +115,14 @@ def special_key_pressed(key, x, y):
                 else:
                     look_at[2] += math.sin(0.01745)*5
             
-                
-    print("Look at | X: " + str(look_at[0]) + " Y: " + str(look_at[1]) + " Z: " + str(look_at[2]))
-    print("Camera  | X: " + str(camera_position[0]) + " Y: " + str(camera_position[1]) + " Z: " + str(camera_position[2]))
-
     glutPostRedisplay()
 
 
-class Projectile:
-
-    def __init__(self, position, direction):
-        self.position = position
-        self.direction = direction
-        self.speed = 20  # Aumentando a velocidade dos projéteis
-        self.max_lifetime = 10  # Defina aqui a quantidade de frames que o projétil vai durar
-        self.current_lifetime = 0  # Tempo atual do projétil
-
-    def update(self):
-        self.position[0] += self.direction[0] * self.speed
-        self.position[1] += self.direction[1] * self.speed
-        self.position[2] += self.direction[2] * self.speed
-        self.current_lifetime += 10  # Incrementa o tempo do projétil
-        if self.current_lifetime > self.max_lifetime:  # Remove o projétil após o tempo limite
-            projectiles.remove(self)  # Remove o projétil da lista
-
-
-    def draw(self):
-        glPushMatrix()
-        glTranslatef(*self.position)
-        glutSolidSphere(0.1, 10, 10)  # Desenha o projétil como uma esfera
-        glPopMatrix()
-
-
-projectiles = []  # Lista para armazenar os projéteis disparados
-
-def draw_projectiles():
-    global projectiles
-
-    for projectile in projectiles[:]:  
-        projectile.update()
-        projectile.draw()
-
-
-
 def mouse_click(button, state, x, y):
-    global projectiles, camera_position
+    global camera_position
 
     if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
-        viewport = glGetIntegerv(GL_VIEWPORT)
-        modelview = glGetDoublev(GL_MODELVIEW_MATRIX)
-        projection = glGetDoublev(GL_PROJECTION_MATRIX)
-
-        mouse_x = x
-        mouse_y = y
-        mouse_pos_near = gluUnProject(mouse_x, mouse_y, 0.0, modelview, projection, viewport)
-        mouse_pos_far = gluUnProject(mouse_x, mouse_y, 1.0, modelview, projection, viewport)
-
-        direction = [
-            mouse_pos_far[0] - mouse_pos_near[0],
-            mouse_pos_far[1] - mouse_pos_near[1],
-            mouse_pos_far[2] - mouse_pos_near[2]
-        ]
-        direction[1] = direction[1]*-1
-
-        length = math.sqrt(sum(coord ** 2 for coord in direction))
-        direction = [coord / length for coord in direction]
-
-        new_projectile = Projectile(list(camera_position), direction)
-        projectiles.append(new_projectile)
+        print(f"Mouse position - X: {normalize_x(y)}, Y: {normalize_y(x)}")
 
 def main():
     glutInit()

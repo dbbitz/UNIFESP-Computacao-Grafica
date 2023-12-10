@@ -116,10 +116,10 @@ def draw_scenario(size,position_X,position_Y,position_Z):
     glPopMatrix()
 
 
-def draw_target(size,position_X,position_Y,position_Z):
+def draw_target(size, position_X, position_Y, position_Z, r, g, b):
     glPushMatrix()
     glTranslatef(position_X, position_Y, position_Z)
-    glutWireSphere(size,20, 20)
+    glColor3f(r, g, b)
+    glutSolidSphere(size, 20, 20)
     glPopMatrix()
-
     

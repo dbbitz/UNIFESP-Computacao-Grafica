@@ -5,7 +5,10 @@ import math
 
 
 def cube():
-     glutSolidCube(1.0)
+    glutSolidCube(1.0)  # Desenha o cubo sólido
+
+def solidCube():
+    glutWireCube(1.0)  # Desenha o cubo sólido
 
 def cylinder(radius, height, num_slices):
     quadric = gluNewQuadric()
@@ -41,11 +44,20 @@ def draw_cylinder_cover(radius, height, num_slices):
 
 
 def draw_gun(radius, height, num_slices):
-    glColor3f(0.5, 0.5, 0.5) 
+
+     
     glPushMatrix()
     glScalef(0.025, 0.12, 0.048)
     glTranslatef(0.0, -0.55, 5.5)
+    glColor3f(1, 0.5, 0.5)
     cube()
+    glPopMatrix()
+
+    glPushMatrix()
+    glScalef(0.025, 0.12, 0.048)
+    glTranslatef(0.0, -0.55, 5.5)
+    glColor3f(1, 1, 1)
+    solidCube()
     glPopMatrix()
 
     glColor3f(0.5, 0.5, 0.5) 
@@ -58,7 +70,9 @@ def draw_gun(radius, height, num_slices):
     glColor3f(0.2, 0.2, 0.2)
     glPushMatrix()
     glTranslatef(0.0, 0.0, 0.0)
+    glRotatef(180, 0, 1, 0)
     cylinder(radius, height, num_slices)
+    
     glPopMatrix()
 
     draw_cylinder_cover(radius, height, num_slices)

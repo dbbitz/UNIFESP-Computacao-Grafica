@@ -28,9 +28,61 @@ score = 0
 level = 1
 time_appear = 5000
 
+shotting = False
+
+def shot():
+    global shotting
+
+    if shotting:
+        glMatrixMode(GL_PROJECTION)
+        glPushMatrix()  # Salva a matriz de projeção atual
+        glLoadIdentity()
+        glOrtho(0.0, 800, 0.0, 600, -1.0, 1.0)
+
+        glMatrixMode(GL_MODELVIEW)
+        glPushMatrix()  # Salva a matriz de modelview atual
+        glLoadIdentity()
+
+        glColor3f(1.0, 1.0, 1.0)
+        glRasterPos2f(0, 0)
+
+        start_vertex = [400 + look_at[0]*215, 160 + look_at[1]*120]
+        end_vertex = [400 + look_at[0]*250, 250 + look_at[1]*250]
+        num_steps = 10
+
+        for i in range(num_steps + 1):
+            t = i / num_steps
+            x = (1 - t) * start_vertex[0] + t * end_vertex[0]
+            y = (1 - t) * start_vertex[1] + t * end_vertex[1]
+
+            
+
+            glPointSize(5 - (i-1)/2)
+            glBegin(GL_POINTS)
+            glVertex2f(x, y)
+            glEnd()
+
+            print(20-i*2)
+
+            # Não chame glutSwapBuffers() aqui
+
+            time.sleep(0.001)
+
+        shotting = False
+
+
+        glPopMatrix()  # Restaura a matriz de modelview original
+        glMatrixMode(GL_PROJECTION)
+        glPopMatrix()  # Restaura a matriz de projeção original
+        glMatrixMode(GL_MODELVIEW)
+
+    
+
 
 
 def draw_text(x, y, text):
+    global shotting
+
     glMatrixMode(GL_PROJECTION)
     glPushMatrix()
     glLoadIdentity()
@@ -50,7 +102,9 @@ def draw_text(x, y, text):
     # Linha vertical
     glVertex2f(400 + look_at[0]*250, 240 + look_at[1]*250)
     glVertex2f(400 + look_at[0]*250, 260 + look_at[1]*250)
-    glEnd()
+    glEnd()   
+    
+
 
     
 
@@ -62,14 +116,6 @@ def draw_text(x, y, text):
     glPopMatrix()
     glMatrixMode(GL_MODELVIEW)
 
-def shot():
-    glPopMatrix()
-
-    glTranslatef(0,4, 2)
-
-    glutSolidCube(2.0)  # Desenha o cubo sólido
-
-    glPushMatrix()
 
 
 def draw():
@@ -108,7 +154,7 @@ def draw():
     draw_gun(0.025, 0.3, 25)
     glPopMatrix()
 
- 
+    shot()
 
 
 
@@ -179,6 +225,7 @@ def mouse_click(button, state, x, y):
     global time_appear
     global camera_position
     global level
+    global shotting
 
 
 
@@ -196,9 +243,13 @@ def mouse_click(button, state, x, y):
             score+=1
 
             print("Acertou")
+
             # print("Sphere position: ", sphere_x, sphere_y)
             # print("Mouse position: ", mouse_norm_x, mouse_norm_y)
             # print("Mira position: ", mira_norm_x, mira_norm_y)
+            
+            shotting = True
+
 
 
 
@@ -211,6 +262,8 @@ def mouse_click(button, state, x, y):
             # print("Sphere position: {:.2f}, {:.2f}".format(sphere_x, sphere_y))
             # print("Mouse position:  {:.2f}, {:.2f}".format(mouse_norm_x, mouse_norm_y))
             # print("Mira position:   {:.2f}, {:.2f}".format(mira_norm_x, mira_norm_y))
+            
+            shotting = True
 
 
         if (score % 5)==0:

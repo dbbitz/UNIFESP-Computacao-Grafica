@@ -102,17 +102,6 @@ def draw():
     '''
 
     glPushMatrix()
-
-    glPushMatrix()
-    glColor3f(1, 0, 0)
-    glTranslatef(camera_lookat[0],camera_lookat[1], camera_lookat[2])
-    glScalef(0.1, 0.1, 0.1)
-    glutWireCube(2)
-    glPopMatrix()
-
-
-
-
     glTranslatef(look_at[0]/3, camera_position[1]-0.3+ look_at[1]/20 , look_at[2]/20 + 3.73)
     glRotatef(-look_at[0]*20, 0, 1, 0)  # Rotaciona o objeto
     glRotatef(look_at[1]*30, 1, 0, 0)  # Rotaciona o objeto
@@ -211,7 +200,6 @@ def mouse_click(button, state, x, y):
             # print("Mouse position: ", mouse_norm_x, mouse_norm_y)
             # print("Mira position: ", mira_norm_x, mira_norm_y)
 
-            print("Diferença: {:.2f}, {:.2f}".format(mouse_norm_x - mira_norm_x, mouse_norm_y - mira_norm_y))
 
 
 
@@ -224,7 +212,6 @@ def mouse_click(button, state, x, y):
             # print("Mouse position:  {:.2f}, {:.2f}".format(mouse_norm_x, mouse_norm_y))
             # print("Mira position:   {:.2f}, {:.2f}".format(mira_norm_x, mira_norm_y))
 
-            print("Diferença: {:.2f}, {:.2f}".format(mouse_norm_x - mira_norm_x, mouse_norm_y - mira_norm_y))
 
         if (score % 5)==0:
             time_appear-=100

@@ -28,7 +28,6 @@ aim_position = [0, 0, 0]
 score = 0
 time_appear = 30000
 
-ballPosition = [look_at[0], look_at[1]*1.2 , look_at[2]/20 + 2]
 
 
 def draw_text(x, y, text):
@@ -115,12 +114,6 @@ def draw():
     draw_gun(0.025, 0.3, 25)
     glPopMatrix()
 
-    glPushMatrix()
-
-    glTranslatef(look_at[0], look_at[1]*1.2 , look_at[2]/20 + 2)
-    glutSolidTorus(0.02, 0.05, 10, 20)
-
-    glPopMatrix()
  
 
 
@@ -203,12 +196,10 @@ def mouse_click(button, state, x, y):
         sphere_y= sphere_positions[current_sphere_index][2]
         if ((mouse_norm_x <= sphere_x + sphere_radius) and  (mouse_norm_x >= sphere_x - sphere_radius)) and ((mouse_norm_y <= sphere_y + sphere_radius) and  (mouse_norm_y >= sphere_y - sphere_radius)):
             score+=1
-            print("disparo: ")
-            shot()
+
         else:
             score-=1
-            print("disparo: ")
-            shot()
+
         if (score % 5)==0:
             time_appear-=100
             

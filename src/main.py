@@ -24,9 +24,9 @@ gun_position = [0, 0, 0]
 object_position = [0, 0,0]
 sphere_positions = [[0.2, 0, 0, 0.1], [0.1, 1, 0, 0.1], [0.3, 2, 0, 0.1], [0.1, 1.2, 0.4, 0.1], [0.2, -1, -0.3, 0.1], [0.2, -1.2, -0.8, 0.1], [0.2, -1.5, 0, 0.1], [0.2, -0.3, 0.1, 0.1], [0.2, 0.3, 0.2, 0.1]]
 
-aim_position = [0, 0, 0]
 score = 0
-time_appear = 30000
+level = 1
+time_appear = 5000
 
 
 
@@ -44,14 +44,12 @@ def draw_text(x, y, text):
     glLineWidth(2.0)  # Define a largura da linha     
     glBegin(GL_LINES)
     # Linha horizontal
-    aim_position[0] = 400 + look_at[0]*100
-    aim_position[1] = 250 + look_at[1]*100
 
-    glVertex2f(400 + look_at[0]*100 - 10, 250 + look_at[1]*100)
-    glVertex2f(400 + look_at[0]*100 + 10, 250 + look_at[1]*100)
+    glVertex2f(410 + look_at[0]*250, 250 + look_at[1]*250)
+    glVertex2f(390 + look_at[0]*250, 250 + look_at[1]*250)
     # Linha vertical
-    glVertex2f(400 + look_at[0]*100, 250 + look_at[1]*100 - 10)
-    glVertex2f(400 + look_at[0]*100, 250 + look_at[1]*100 + 10)
+    glVertex2f(400 + look_at[0]*250, 240 + look_at[1]*250)
+    glVertex2f(400 + look_at[0]*250, 260 + look_at[1]*250)
     glEnd()
 
     
@@ -82,7 +80,7 @@ def draw():
 
     gluLookAt(
         camera_position[0], camera_position[1], camera_position[2],
-        look_at[0], look_at[1], look_at[2],
+        0, 0, look_at[2],
         up_vector[0], up_vector[1], up_vector[2]
     )
 
@@ -120,6 +118,8 @@ def draw():
 
     score_text = f"Score: {score}"
     draw_text(10, 580, score_text)
+    level_text = f"Level: {level}"
+    draw_text(10, 550, level_text)
 
     glutSwapBuffers()
 
@@ -182,8 +182,17 @@ def mouse_click(button, state, x, y):
     global score
     global time_appear
     global camera_position
+    global level
+
+
+    if score/level > 10:
+        level+=1
+        time_appear-=250
+
     if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
 
+        mira_x = (((400 + look_at[0]*250)/ 400) - 1.0)
+        mira_y = (-((250 + look_at[1]*250)/ 300) + 1.0)
         norm_x = ((x/ 400) - 1.0)
         norm_y = (-(y/ 300) + 1.0)
         # norm_x = (((400 + look_at[0]*100)/ 400) - 1.0)*2
@@ -191,14 +200,33 @@ def mouse_click(button, state, x, y):
 
         mouse_norm_x = norm_x * 2.65
         mouse_norm_y = norm_y * 2
+        mira_norm_x = mira_x * 2.65
+        mira_norm_y = mira_y * -2
         sphere_radius= sphere_positions[current_sphere_index][0]
         sphere_x= sphere_positions[current_sphere_index][1]
         sphere_y= sphere_positions[current_sphere_index][2]
-        if ((mouse_norm_x <= sphere_x + sphere_radius) and  (mouse_norm_x >= sphere_x - sphere_radius)) and ((mouse_norm_y <= sphere_y + sphere_radius) and  (mouse_norm_y >= sphere_y - sphere_radius)):
+        if ((mira_norm_x <= sphere_x + sphere_radius) and  (mira_norm_x >= sphere_x - sphere_radius)) and ((mira_norm_y <= sphere_y + sphere_radius) and  (mira_norm_y >= sphere_y - sphere_radius)):
             score+=1
+
+            print("Acertou")
+            # print("Sphere position: ", sphere_x, sphere_y)
+            # print("Mouse position: ", mouse_norm_x, mouse_norm_y)
+            # print("Mira position: ", mira_norm_x, mira_norm_y)
+
+            print("Diferença: {:.2f}, {:.2f}".format(mouse_norm_x - mira_norm_x, mouse_norm_y - mira_norm_y))
+
+
+
+
 
         else:
             score-=1
+            print("Errou")
+            # print("Sphere position: {:.2f}, {:.2f}".format(sphere_x, sphere_y))
+            # print("Mouse position:  {:.2f}, {:.2f}".format(mouse_norm_x, mouse_norm_y))
+            # print("Mira position:   {:.2f}, {:.2f}".format(mira_norm_x, mira_norm_y))
+
+            print("Diferença: {:.2f}, {:.2f}".format(mouse_norm_x - mira_norm_x, mouse_norm_y - mira_norm_y))
 
         if (score % 5)==0:
             time_appear-=100

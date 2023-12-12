@@ -21,12 +21,14 @@ current_sphere_index = 0
 
 gun_position = [0, 0, 0]
 
-object_position = [0, 0]
+object_position = [0, 0,0]
 sphere_positions = [[0.2, 0, 0, 0.1], [0.1, 1, 0, 0.1], [0.3, 2, 0, 0.1], [0.1, 1.2, 0.4, 0.1], [0.2, -1, -0.3, 0.1], [0.2, -1.2, -0.8, 0.1], [0.2, -1.5, 0, 0.1], [0.2, -0.3, 0.1, 0.1], [0.2, 0.3, 0.2, 0.1]]
 
 aim_position = [0, 0, 0]
 score = 0
 time_appear = 30000
+
+ballPosition = [look_at[0], look_at[1]*1.2 , look_at[2]/20 + 2]
 
 
 def draw_text(x, y, text):
@@ -62,6 +64,15 @@ def draw_text(x, y, text):
     glMatrixMode(GL_PROJECTION)
     glPopMatrix()
     glMatrixMode(GL_MODELVIEW)
+
+def shot():
+    glPopMatrix()
+
+    glTranslatef(0,4, 2)
+
+    glutSolidCube(2.0)  # Desenha o cubo sólido
+
+    glPushMatrix()
 
 
 def draw():
@@ -103,6 +114,13 @@ def draw():
     glRotatef(look_at[1]*30, 1, 0, 0)  # Rotaciona o objeto
     draw_gun(0.025, 0.3, 25)
     glPopMatrix()
+
+    glPushMatrix()
+
+    glTranslatef(look_at[0], look_at[1]*1.2 , look_at[2]/20 + 2)
+    glutSolidTorus(0.02, 0.05, 10, 20)
+
+    glPopMatrix()
  
 
 
@@ -127,8 +145,8 @@ def special_key_pressed(key, x, y):
             if (look_at[2] >= 1.22):
                 look_at[2] = 1.22
 
-            if(look_at[0] < -0.83):
-                look_at[0] = -0.83
+            if(look_at[0] < -1):
+                look_at[0] = -1
                 
 
             if(look_at[2] <= 5):
@@ -143,8 +161,8 @@ def special_key_pressed(key, x, y):
             if (look_at[2] >= 1.22):
                 look_at[2] = 1.22
 
-            if(look_at[0] > 0.83):
-                look_at[0] = 0.83
+            if(look_at[0] > 1):
+                look_at[0] = 1
 
             if(look_at[2] <= 5):
                 look_at[0] += math.cos(1.55)*5
@@ -185,16 +203,12 @@ def mouse_click(button, state, x, y):
         sphere_y= sphere_positions[current_sphere_index][2]
         if ((mouse_norm_x <= sphere_x + sphere_radius) and  (mouse_norm_x >= sphere_x - sphere_radius)) and ((mouse_norm_y <= sphere_y + sphere_radius) and  (mouse_norm_y >= sphere_y - sphere_radius)):
             score+=1
-            print("acertou")
-            print("Mira --> "+"X:"+ str(((400 + look_at[0]*265)/ 400)-1)+" Y:" +str((-((250 + look_at[1]*300)/ 300)+1 )))
-            print(mouse_norm_x, mouse_norm_y)
-            print(sphere_positions[current_sphere_index][0], sphere_positions[current_sphere_index][1], sphere_positions[current_sphere_index][2])
+            print("disparo: ")
+            shot()
         else:
             score-=1
-            print("errou")
-            print("Mira --> "+"X:"+ str(((400 + look_at[0]*265)/ 400)-1)+" Y:" +str((-((250 + look_at[1]*265)/ 300)+1 )))
-            print(mouse_norm_x, mouse_norm_y)
-            print("Raio:"+str(sphere_positions[current_sphere_index][0])+ " X:"+str(sphere_positions[current_sphere_index][1])+" Y:"+str(sphere_positions[current_sphere_index][2]))
+            print("disparo: ")
+            shot()
         if (score % 5)==0:
             time_appear-=100
             

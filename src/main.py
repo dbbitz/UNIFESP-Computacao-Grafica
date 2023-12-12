@@ -103,6 +103,13 @@ def draw():
 
     glPushMatrix()
 
+    glPushMatrix()
+    glColor3f(1, 0, 0)
+    glTranslatef(camera_lookat[0],camera_lookat[1], camera_lookat[2])
+    glScalef(0.1, 0.1, 0.1)
+    glutWireCube(2)
+    glPopMatrix()
+
 
 
 
@@ -185,21 +192,12 @@ def mouse_click(button, state, x, y):
     global level
 
 
-    if score/level > 10:
-        level+=1
-        time_appear-=250
 
     if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
 
         mira_x = (((400 + look_at[0]*250)/ 400) - 1.0)
         mira_y = (-((250 + look_at[1]*250)/ 300) + 1.0)
-        norm_x = ((x/ 400) - 1.0)
-        norm_y = (-(y/ 300) + 1.0)
-        # norm_x = (((400 + look_at[0]*100)/ 400) - 1.0)*2
-        # norm_y = (-((250 + look_at[1]*100)/ 300) + 1.0)
 
-        mouse_norm_x = norm_x * 2.65
-        mouse_norm_y = norm_y * 2
         mira_norm_x = mira_x * 2.65
         mira_norm_y = mira_y * -2
         sphere_radius= sphere_positions[current_sphere_index][0]
@@ -230,6 +228,7 @@ def mouse_click(button, state, x, y):
 
         if (score % 5)==0:
             time_appear-=100
+            level+=1
             
 
 
